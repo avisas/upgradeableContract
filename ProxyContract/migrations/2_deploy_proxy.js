@@ -1,13 +1,14 @@
 // grab from our source file
 const Dogs = artifacts.require('Dogs');
-const Proxy = artifacts.require('Proxy');
 const DogsUpdated = artifacts.require('DogsUpdated');
+const Proxy = artifacts.require('Proxy');
 
 module.exports = async function(deployer, network, accounts) {
     // type truffle deployment logic
     const dogs = await Dogs.new();
     const proxy = await Proxy.new(dogs.address);
 
+    
     // dog contract is located at this address => (proxy.address)
     //to believe that proxy contract is Dog. ProxyDog to fool Truffle
     var proxyDog = await Dogs.at(proxy.address); 
@@ -17,8 +18,8 @@ module.exports = async function(deployer, network, accounts) {
     //tested
     var nrOfDogs = await proxyDog.getNumberOfDogs();
     console.log("Before update: " + nrOfDogs.toNumber());
-
-    //Deploy new version of Dogs
+    
+    //------> Deploy new version of Dogs
     const dogsUpdated = await DogsUpdated.new();
     proxy.upgrade(dogsUpdated.address);
 
@@ -33,4 +34,8 @@ module.exports = async function(deployer, network, accounts) {
 
     //Set the nr of dogs through the proxy with NEW FUNC CONTRACT
     await proxyDog.setNumberOfDogs(30);
+
+    nrOfDogs = await proxyDog.getNumberOfDogs();
+    console.log("After change: " + nrOfDogs.toNumber());
+    
 }

@@ -8,7 +8,7 @@ contract Proxy is Storage {
       currentAddress = _currentAddress;
     }
 
-    function upgrade(address _newAddress) {
+    function upgrade(address _newAddress) public {
       currentAddress = _newAddress;
     }
 
