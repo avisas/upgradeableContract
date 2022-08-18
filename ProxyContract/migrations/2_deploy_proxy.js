@@ -8,7 +8,6 @@ module.exports = async function(deployer, network, accounts) {
     const dogs = await Dogs.new();
     const proxy = await Proxy.new(dogs.address);
 
-    
     // dog contract is located at this address => (proxy.address)
     //to believe that proxy contract is Dog. ProxyDog to fool Truffle
     var proxyDog = await Dogs.at(proxy.address); 
