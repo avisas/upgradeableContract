@@ -5,10 +5,12 @@ contract Proxy is Storage {
     address currentAddress;
 
     constructor(address _currentAddress) public {
+      owner = msg.sender;
       currentAddress = _currentAddress;
     }
 
     function upgrade(address _newAddress) public {
+      require(msg.sender == owner);
       currentAddress = _newAddress;
     }
 
@@ -16,7 +18,7 @@ contract Proxy is Storage {
     // redirect all functions that are not in this contract
     fallback() external payable {
         address implementation = currentAddress;
-        require(currentAddress != address(0));
+        require(currentAddress != address(0), "fallback: can't be zero address");
         bytes memory data = msg.data;
 
         //DELEGATECALL EVERY FUNCTION CALL
